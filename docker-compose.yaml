@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  speedtest2mqtt:
+    container_name: speedtest2mqtt
+    restart: "no"
+    read_only: true
+    user: 2536:2536
+    image: oitc/speedtest2mqtt
+    environment:
+      MQTT_SERVER: test.mosquitto.org
+      MQTT_PORT: 1883
+      MQTT_TOPIC: de/oberdorf-itc/speedtest2mqtt/results
+      FREQUENCE: 300
+   secrets:
+      - speedtest2mqtt_mqtt_password
+    tmpfs:
+      - /tmp
+
+secrets:
+  speedtest2mqtt_mqtt_password:
+    file: /srv/docker/speedtest2mqtt/secrets/mqtt_password
