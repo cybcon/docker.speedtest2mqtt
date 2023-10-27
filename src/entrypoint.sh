@@ -15,7 +15,7 @@
 #-----------------------------------------------------------------------------
 set -eo pipefail
 
-VERSION="1.0.0"
+VERSION="0.0.1"
 
 # Set default values
 if [ -z "${MQTT_SERVER}" ]; then
@@ -168,15 +168,18 @@ function do_speedtest {
 function publish_result {
   data="${@}"
 
-  echo "${data}"
+  CREDENTIALS=''
+  if [ ! -z "${MQTT_USER}" -a ! -z "${MQTT_PASSWORD}" ]; then
+    CREENTIALS="--username \"${MQTT_USER}\" --pw \"${MQTT_PASSWORD}\""
+  fi
+  INSECURE=''
+  if [ "${MQTT_TLS_no_hostname_validation}" == "true" ]; then
+    INSECURE='--insecure'
+  fi
 
-#| `MQTT_SERVER` | The MQTT server hostname or IP address | **OPTIONAL** | `localhost` |
+  echo "${data}" |  mosquitto_pub --host ${MQTT_SERVER} --port ${MQTT_PORT} ${CREDENTIALS} --topic ${MQTT_TOPIC} ${INSECURE} --retain --stdin-file
+
 #| `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
-#| `MQTT_PORT` | The TCP port of the MQTT server | **OPTIONAL** | `1883` |
-#| `MQTT_TLS_no_hostname_validation` | If TLS is enabled, skip the hostname validation of the TLS certificate | `false` |
-#| `MQTT_USER` | The MQTT username for MQTT authentication | **OPTIONAL** | |
-#| `MQTT_PASSWORD_FILE` | The filepath where the MQTT password is stored for MQTT authentication | **OPTIONAL** | |
-#| `MQTT_TOPIC` | The MQTT topic to send the speedtest results to | **MANDATORY** | |
 }
 
 
