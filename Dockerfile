@@ -12,7 +12,7 @@ RUN apk upgrade --available --no-cache --update \
     && apk add --no-cache --update \
        speedtest-cli=2.1.3-r5 \
        mosquitto-clients=2.0.18-r0 \
-       bash=5.2.15-r6
+       bash=5.2.15-r5
 
 COPY --chown=root:root /src /
 
