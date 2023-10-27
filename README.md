@@ -27,7 +27,7 @@ The container grab the configuration via environment variables.
 | `MQTT_SERVER` | The MQTT server hostname or IP address | **OPTIONAL** | `localhost` |
 | `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
 | `MQTT_PORT` | The TCP port of the MQTT server | **OPTIONAL** | `1883` |
-| `MQTT_TLS_no_hostname_validation` | If TLS is enabled, validate the hostname of the TLS certificate | `true` |
+| `MQTT_TLS_no_hostname_validation` | If TLS is enabled, skip the hostname validation of the TLS certificate | `false` |
 | `MQTT_USER` | The MQTT username for MQTT authentication | **OPTIONAL** | |
 | `MQTT_PASSWORD_FILE` | The filepath where the MQTT password is stored for MQTT authentication | **OPTIONAL** | |
 | `MQTT_TOPIC` | The MQTT topic to send the speedtest results to | **MANDATORY** | |
