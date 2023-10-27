@@ -14,4 +14,3 @@ USER 2536:2536
 
 # Start Process
 ENTRYPOINT ["/entrypoint.sh"]
-
