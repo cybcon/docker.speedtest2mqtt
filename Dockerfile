@@ -1,7 +1,7 @@
 FROM alpine:3.18.4
 
 LABEL maintainer="Michael Oberdorf IT-Consulting <info@oberdorf-itc.de>"
-LABEL site.local.program.version="1.0.1"
+LABEL site.local.program.version="1.1.0"
 
 ENV MQTT_SERVER=localhost \
     MQTT_PORT=1883 \

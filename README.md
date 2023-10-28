@@ -6,7 +6,8 @@ Source code: [GitHub](https://github.com/cybcon/docker.speedtest2mqtt)
 
 # Supported tags and respective `Dockerfile` links
 
-* [`latest`, `1.0.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.0.1/Dockerfile)
+* [`latest`, `1.1.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.0/Dockerfile)
+* [`1.0.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.0.1/Dockerfile)
 
 # Summary
 
@@ -52,7 +53,7 @@ services:
       MQTT_PORT: 1883
       MQTT_TOPIC: de/oberdorf-itc/speedtest2mqtt/results
       FREQUENCE: 300
-   secrets:
+    secrets:
       - speedtest2mqtt_mqtt_password
     tmpfs:
       - /tmp
