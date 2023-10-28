@@ -7,15 +7,15 @@
 # Author: Michael Oberdorf
 # Date:   2023-10-27
 # Last changed by: Michael Oberdorf
-# Last changed at: 2023-10-27
+# Last changed at: 2023-10-28
 ##############################################################################
 
 #-----------------------------------------------------------------------------
 # Global configuration
 #-----------------------------------------------------------------------------
-set -eo pipefail
-
-VERSION="0.0.1"
+VERSION="1.0.1"
+ERROR_SLEEP_SECONDS=60
+CACERT_SYSTEM_PATH='/usr/share/ca-certificates'
 
 # Set default values
 if [ -z "${MQTT_SERVER}" ]; then
@@ -29,6 +29,9 @@ if [ -z "${MQTT_TLS_enabled}" ]; then
 fi
 if [ -z "${MQTT_TLS_no_hostname_validation}" ]; then
   MQTT_TLS_no_hostname_validation='false'
+fi
+if [ -z "${MQTT_RETAIN}" ]; then
+  MQTT_RETAIN='false'
 fi
 MQTT_PASSWORD=''
 
@@ -117,6 +120,13 @@ function validate_input_parameters {
     MQTT_TLS_no_hostname_validation=$(validate_boolean ${MQTT_TLS_no_hostname_validation})
   fi
 
+  if [ -z "$(validate_boolean ${MQTT_RETAIN})" ]; then
+    echo "ERROR: Environment variable 'MQTT_RETAIN' needs to be 'true' or 'false' (but is ${MQTT_RETAIN})!" >&2
+    exit 1
+  else
+    MQTT_RETAIN=$(validate_boolean ${MQTT_RETAIN})
+  fi
+
   if [ ! -z "${MQTT_PORT}" ]; then
     if [ "$(is_int ${MQTT_PORT})" == "false" ]; then
       echo "ERROR: Given MQTT Port (${MQTT_PORT}) is no integer!" >&2
@@ -145,6 +155,13 @@ function validate_input_parameters {
     fi
   fi
 
+  if [ ! -z "${MQTT_CACERT_FILE}" ]; then
+    if [ ! -f "${MQTT_CACERT_FILE}" -a ! -d "${MQTT_CACERT_FILE}" ]; then
+      echo "ERROR: File not found exception for MQTT_CACERT_FILE=${MQTT_CACERT_FILE}!" >&2
+      exit 1
+    fi
+  fi
+
   if [ -z "${MQTT_TOPIC}" ]; then
     echo "ERROR: MQTT_TOPIC not defined. This parameter is mandatory!" >&2
     exit 1
@@ -157,7 +174,7 @@ function validate_input_parameters {
 # @return: string, json output
 #-----------------------------------------------------------------------------
 function do_speedtest {
-  speedtest-cli --json
+  speedtest-cli --json | jq 2>/dev/null
 }
 
 #-----------------------------------------------------------------------------
@@ -172,14 +189,34 @@ function publish_result {
   if [ ! -z "${MQTT_USER}" -a ! -z "${MQTT_PASSWORD}" ]; then
     CREENTIALS="--username \"${MQTT_USER}\" --pw \"${MQTT_PASSWORD}\""
   fi
-  INSECURE=''
-  if [ "${MQTT_TLS_no_hostname_validation}" == "true" ]; then
-    INSECURE='--insecure'
+  RETAIN=''
+  if [ "${MQTT_RETAIN}" == "true" ]; then
+    RETAIN='--retain'
   fi
 
-  echo "${data}" |  mosquitto_pub --host ${MQTT_SERVER} --port ${MQTT_PORT} ${CREDENTIALS} --topic ${MQTT_TOPIC} ${INSECURE} --retain --stdin-file
+  TLS=''
+  if [ "${MQTT_TLS_enabled}" == "true" ]; then
+    CACERT=''
+    if [ ! -z "${MQTT_CACERT_FILE}" ]; then
+      if [ -f "${MQTT_CACERT_FILE}" ]; then
+        CACERT="--cafile \"${MQTT_CACERT_FILE}\""
+      elif [ -f "${MQTT_CACERT_FILE}" ]; then
+        CACERT="--capath \"${MQTT_CACERT_FILE}\""
+      fi
+    else
+      CACERT="--capath \"${CACERT_SYSTEM_PATH}\""
+    fi
 
-#| `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
+    INSECURE=''
+    if [ "${MQTT_TLS_no_hostname_validation}" == "true" ]; then
+      CACERT=''
+      INSECURE='--insecure'
+    fi
+
+    TLS="${INSECURE} ${CACERT}"
+  fi
+
+  echo "${data}" |  mosquitto_pub --host ${MQTT_SERVER} --port ${MQTT_PORT} ${CREDENTIALS} --topic ${MQTT_TOPIC} ${TLS} ${RETAIN} --stdin-file
 }
 
 
@@ -193,12 +230,19 @@ validate_input_parameters
 
 while true
 do
+  echo "Trigger Speedtest"
   result=$(do_speedtest)
   if [ ! -z "${result}" ]; then
+    echo "Publish speedtest rresult via MQTT"
     publish_result "${result}"
+  else
+    echo "WARNING: Speedtest without correct json output. Sleep ${ERROR_SLEEP_SECONDS} and try again"
+    sleep ${ERROR_SLEEP_SECONDS}
+    continue
   fi
 
   if [ ! -z "${FREQUENCE}" ]; then
+    echo "Sleeping ${FREQUENCE} seconds"
     sleep ${FREQUENCE}
   else
     break
