@@ -13,7 +13,7 @@
 #-----------------------------------------------------------------------------
 # Global configuration
 #-----------------------------------------------------------------------------
-VERSION="1.0.1"
+VERSION="1.1.0"
 ERROR_SLEEP_SECONDS=60
 CACERT_SYSTEM_PATH='/usr/share/ca-certificates'
 
@@ -233,7 +233,9 @@ do
   echo "Trigger Speedtest"
   result=$(do_speedtest)
   if [ ! -z "${result}" ]; then
-    echo "Publish speedtest rresult via MQTT"
+    echo "Speedtest result is:"
+    echo "${result}"
+    echo "Publish speedtest result via MQTT"
     publish_result "${result}"
   else
     echo "WARNING: Speedtest without correct json output. Sleep ${ERROR_SLEEP_SECONDS} and try again"
