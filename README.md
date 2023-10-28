@@ -6,7 +6,7 @@ Source code: [GitHub](https://github.com/cybcon/docker.speedtest2mqtt)
 
 # Supported tags and respective `Dockerfile` links
 
-* [`latest`, `1.0.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.0.0/Dockerfile)
+* [`latest`, `1.0.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.0.1/Dockerfile)
 
 # Summary
 
@@ -25,12 +25,14 @@ The container grab the configuration via environment variables.
 | Environment variable name | Description | Required | Default value |
 |--|--|--|--|
 | `MQTT_SERVER` | The MQTT server hostname or IP address | **OPTIONAL** | `localhost` |
-| `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
 | `MQTT_PORT` | The TCP port of the MQTT server | **OPTIONAL** | `1883` |
+| `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
+| `MQTT_CACERT_FILE` | If TLS is enabled, the path to the CA certificate file to validate the MQTT server certificate | **OPTIONAL** | |
 | `MQTT_TLS_no_hostname_validation` | If TLS is enabled, skip the hostname validation of the TLS certificate | `false` |
 | `MQTT_USER` | The MQTT username for MQTT authentication | **OPTIONAL** | |
 | `MQTT_PASSWORD_FILE` | The filepath where the MQTT password is stored for MQTT authentication | **OPTIONAL** | |
 | `MQTT_TOPIC` | The MQTT topic to send the speedtest results to | **MANDATORY** | |
+| `MQTT_RETAIN`| Set the retain flag when publishing the speedtest result to MQTT topic | **OPTIONAL** | `false` |
 | `FREQUENCE` | Time in seconds between speedtests. If nothing is given, the container stops after 1 speedtest | **OPTIONAL** | |
 
 # Docker compose configuration
