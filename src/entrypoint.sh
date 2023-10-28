@@ -242,6 +242,7 @@ do
   fi
 
   if [ ! -z "${FREQUENCE}" ]; then
+    echo "Sleeping ${FREQUENCE} seconds"
     sleep ${FREQUENCE}
   else
     break
