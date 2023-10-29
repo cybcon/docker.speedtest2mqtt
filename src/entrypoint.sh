@@ -7,13 +7,13 @@
 # Author: Michael Oberdorf
 # Date:   2023-10-27
 # Last changed by: Michael Oberdorf
-# Last changed at: 2023-10-28
+# Last changed at: 2023-10-29
 ##############################################################################
 
 #-----------------------------------------------------------------------------
 # Global configuration
 #-----------------------------------------------------------------------------
-VERSION="1.1.0"
+VERSION="1.1.1"
 ERROR_SLEEP_SECONDS=60
 CACERT_SYSTEM_PATH='/usr/share/ca-certificates'
 
@@ -187,7 +187,7 @@ function publish_result {
 
   CREDENTIALS=''
   if [ ! -z "${MQTT_USER}" -a ! -z "${MQTT_PASSWORD}" ]; then
-    CREENTIALS="--username \"${MQTT_USER}\" --pw \"${MQTT_PASSWORD}\""
+    CREDENTIALS="--username ${MQTT_USER} --pw ${MQTT_PASSWORD}"
   fi
   RETAIN=''
   if [ "${MQTT_RETAIN}" == "true" ]; then
@@ -199,12 +199,12 @@ function publish_result {
     CACERT=''
     if [ ! -z "${MQTT_CACERT_FILE}" ]; then
       if [ -f "${MQTT_CACERT_FILE}" ]; then
-        CACERT="--cafile \"${MQTT_CACERT_FILE}\""
-      elif [ -f "${MQTT_CACERT_FILE}" ]; then
-        CACERT="--capath \"${MQTT_CACERT_FILE}\""
+        CACERT="--cafile ${MQTT_CACERT_FILE}"
+      elif [ -d "${MQTT_CACERT_FILE}" ]; then
+        CACERT="--capath ${MQTT_CACERT_FILE}"
       fi
     else
-      CACERT="--capath \"${CACERT_SYSTEM_PATH}\""
+      CACERT="--capath ${CACERT_SYSTEM_PATH}"
     fi
 
     INSECURE=''
@@ -213,7 +213,7 @@ function publish_result {
       INSECURE='--insecure'
     fi
 
-    TLS="${INSECURE} ${CACERT}"
+    TLS="${INSECURE} ${CACERT} --tls-version tlsv1.2"
   fi
 
   echo "${data}" |  mosquitto_pub --host ${MQTT_SERVER} --port ${MQTT_PORT} ${CREDENTIALS} --topic ${MQTT_TOPIC} ${TLS} ${RETAIN} --stdin-file
