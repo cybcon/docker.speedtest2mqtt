@@ -4,9 +4,13 @@ Maintained by: [Michael Oberdorf IT-Consulting](https://www.oberdorf-itc.de/)
 
 Source code: [GitHub](https://github.com/cybcon/docker.speedtest2mqtt)
 
+Container image: [DockerHub](https://hub.docker.com/r/oitc/speedtest2mqtt)
+
+
 # Supported tags and respective `Dockerfile` links
 
-* [`latest`, `1.1.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.0/Dockerfile)
+* [`latest`, `1.1.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.1/Dockerfile)
+* [`1.1.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.0/Dockerfile)
 * [`1.0.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.0.1/Dockerfile)
 
 # Summary
@@ -29,7 +33,7 @@ The container grab the configuration via environment variables.
 | `MQTT_PORT` | The TCP port of the MQTT server | **OPTIONAL** | `1883` |
 | `MQTT_TLS_enabled` | Should SSL communication be enabled (`true`) or not (`false`) | **OPTIONAL** | `false` |
 | `MQTT_CACERT_FILE` | If TLS is enabled, the path to the CA certificate file to validate the MQTT server certificate | **OPTIONAL** | |
-| `MQTT_TLS_no_hostname_validation` | If TLS is enabled, skip the hostname validation of the TLS certificate | `false` |
+| `MQTT_TLS_no_hostname_validation` | If TLS is enabled, skip the hostname validation of the TLS certificate | **OPTIONAL** | `false` |
 | `MQTT_USER` | The MQTT username for MQTT authentication | **OPTIONAL** | |
 | `MQTT_PASSWORD_FILE` | The filepath where the MQTT password is stored for MQTT authentication | **OPTIONAL** | |
 | `MQTT_TOPIC` | The MQTT topic to send the speedtest results to | **MANDATORY** | |
@@ -62,6 +66,12 @@ secrets:
   speedtest2mqtt_mqtt_password:
     file: /srv/docker/speedtest2mqtt/secrets/mqtt_password
 ```
+
+# Donate
+I would appreciate a small donation to support the further development of my open source projects.
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=BHGJGGUS6RH44" target="_blank"><img src="https://raw.githubusercontent.com/stefan-niedermann/paypal-donate-button/master/paypal-donate-button.png" alt="Donate with PayPal" width="200px"></a>
+
 
 # License
 
