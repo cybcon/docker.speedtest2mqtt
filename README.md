@@ -24,7 +24,8 @@ Container image: [DockerHub](https://hub.docker.com/r/oitc/speedtest2mqtt)
 
 # Supported tags and respective `Dockerfile` links
 
-* [`latest`, `1.1.3`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.3/Dockerfile)
+* [`latest`, `1.1.4`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.4/Dockerfile)
+* [`1.1.3`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.3/Dockerfile)
 * [`1.1.2`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.2/Dockerfile)
 * [`1.1.1`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.1/Dockerfile)
 * [`1.1.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.0/Dockerfile)
@@ -92,7 +93,7 @@ I would appreciate a small donation to support the further development of my ope
 
 # License
 
-Copyright (c) 2023-2024 Michael Oberdorf IT-Consulting
+Copyright (c) 2023-2025 Michael Oberdorf IT-Consulting
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
