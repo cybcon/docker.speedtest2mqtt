@@ -7,13 +7,13 @@
 # Author: Michael Oberdorf
 # Date:   2023-10-27
 # Last changed by: Michael Oberdorf
-# Last changed at: 2025-12-28
+# Last changed at: 2026-07-02
 ##############################################################################
 
 #-----------------------------------------------------------------------------
 # Global configuration
 #-----------------------------------------------------------------------------
-VERSION="1.1.4"
+VERSION="1.2.0"
 ERROR_SLEEP_SECONDS=60
 CACERT_SYSTEM_PATH='/usr/share/ca-certificates'
 
