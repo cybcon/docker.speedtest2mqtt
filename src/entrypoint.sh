@@ -7,13 +7,13 @@
 # Author: Michael Oberdorf
 # Date:   2023-10-27
 # Last changed by: Michael Oberdorf
-# Last changed at: 2026-07-02
+# Last changed at: 2026-07-13
 ##############################################################################
 
 #-----------------------------------------------------------------------------
 # Global configuration
 #-----------------------------------------------------------------------------
-VERSION="1.2.0"
+VERSION="1.3.0"
 ERROR_SLEEP_SECONDS=60
 CACERT_SYSTEM_PATH='/usr/share/ca-certificates'
 
@@ -34,6 +34,12 @@ if [ -z "${MQTT_RETAIN}" ]; then
   MQTT_RETAIN='false'
 fi
 MQTT_PASSWORD=''
+CLI_OPTIONS=''
+if [ -n "${1}" ]; then
+  echo "CLI options for speedtest given: ${@}"
+  CLI_OPTIONS="${@}"
+fi
+
 
 ##############################################################################
 # F U N C T I O N S
@@ -174,7 +180,8 @@ function validate_input_parameters {
 # @return: string, json output
 #-----------------------------------------------------------------------------
 function do_speedtest {
-  speedtest-cli --json | jq 2>/dev/null
+  cli_options=$(trim "${@}")
+  speedtest-cli --json ${cli_options} | jq 2>/dev/null
 }
 
 #-----------------------------------------------------------------------------
@@ -228,10 +235,11 @@ echo "Speedtest2mqtt v${VERSION} started"
 
 validate_input_parameters
 
+
 while true
 do
   echo "Trigger Speedtest"
-  result=$(do_speedtest)
+  result=$(do_speedtest ${CLI_OPTIONS})
   if [ ! -z "${result}" ]; then
     echo "Speedtest result is:"
     echo "${result}"
