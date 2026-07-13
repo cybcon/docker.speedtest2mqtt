@@ -101,7 +101,7 @@ services:
     read_only: true
     user: 2536:2536
     image: oitc/speedtest2mqtt:latest
-    command: ["--no-upload"]
+    command: ["--server", "15667"]
     environment:
       MQTT_SERVER: test.mosquitto.org
       MQTT_PORT: 1883

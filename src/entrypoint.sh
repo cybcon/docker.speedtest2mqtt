@@ -239,7 +239,7 @@ validate_input_parameters
 while true
 do
   echo "Trigger Speedtest"
-  result=$(do_speedtest)
+  result=$(do_speedtest ${CLI_OPTIONS})
   if [ ! -z "${result}" ]; then
     echo "Speedtest result is:"
     echo "${result}"
