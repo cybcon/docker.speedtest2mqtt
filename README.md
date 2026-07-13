@@ -20,10 +20,10 @@ Container image: [DockerHub](https://hub.docker.com/r/oitc/speedtest2mqtt)
 [![][docker-stars-shield]][docker-stars-link]
 [![][docker-size-shield]][docker-size-link]
 
-
 ## Supported tags and respective `Dockerfile` links
 
-* [`latest`, `1.2.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.2.0/Dockerfile)
+* [`latest`, `1.3.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.3.0/Dockerfile)
+* [`1.2.0`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.2.0/Dockerfile)
 * [`1.1.4`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.4/Dockerfile)
 * [`1.1.3`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.3/Dockerfile)
 * [`1.1.2`](https://github.com/cybcon/docker.speedtest2mqtt/blob/v1.1.2/Dockerfile)
@@ -38,6 +38,7 @@ the [mosquitto-client](https://mosquitto.org/) to trigger a simple internet spee
 to a MQTT server topic.
 
 ## Prerequisites to run the docker container
+
 You need an MQTT server to send the data to it.
 
 ## Configuration
@@ -59,11 +60,15 @@ The container grab the configuration via environment variables.
 | `MQTT_RETAIN`| Set the retain flag when publishing the speedtest result to MQTT topic | **OPTIONAL** | `false` |
 | `FREQUENCE` | Time in seconds between speedtests. If nothing is given, the container stops after 1 speedtest | **OPTIONAL** | |
 
+### CLI Options
+
+When starting the service, it is possible to add additional CLI options to the `speedtest-cli` command execution. By default, every execution will add the option `--json`.
+
+So, every `command` you give to the container run, will be added to `speedtest-cli --json`.
+
 ## Docker compose configuration
 
 ```yaml
-version: '3.8'
-
 services:
   speedtest2mqtt:
     container_name: speedtest2mqtt
@@ -85,6 +90,34 @@ secrets:
   speedtest2mqtt_mqtt_password:
     file: /srv/docker/speedtest2mqtt/secrets/mqtt_password
 ```
+
+### Example with speedtest-cli command line options
+
+```yaml
+services:
+  speedtest2mqtt:
+    container_name: speedtest2mqtt
+    restart: "no"
+    read_only: true
+    user: 2536:2536
+    image: oitc/speedtest2mqtt:latest
+    command: ["--no-upload"]
+    environment:
+      MQTT_SERVER: test.mosquitto.org
+      MQTT_PORT: 1883
+      MQTT_TOPIC: de/oberdorf-itc/speedtest2mqtt/results
+      FREQUENCE: 300
+    secrets:
+      - speedtest2mqtt_mqtt_password
+    tmpfs:
+      - /tmp
+
+secrets:
+  speedtest2mqtt_mqtt_password:
+    file: /srv/docker/speedtest2mqtt/secrets/mqtt_password
+```
+
+
 
 ## Donate
 
